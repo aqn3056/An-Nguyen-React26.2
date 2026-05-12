@@ -21,11 +21,13 @@ function App() {
     setTodoList(updatedTodos);
   };
 
+  const filteredTodoList = todoList.filter(todo => !todo.isCompleted);
+
   return (
     <div>
       <h1>Todo List</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} onCompleteTodo={completeTodo} />
+      <TodoList todoList={filteredTodoList} onCompleteTodo={completeTodo} />
     </div>
   );
 }
