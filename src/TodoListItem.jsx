@@ -1,6 +1,15 @@
-function TodoListItem({todo}) {
+function TodoListItem({ todo, onCompleteTodo }) {
   return (
-    <li>{todo.title}</li>
+    <li>
+      <input
+        type="checkbox"
+        checked={todo.isCompleted}
+        onChange={() => onCompleteTodo(todo.id)}
+      />
+      <span style={{ textDecoration: todo.isCompleted ? 'line-through' : 'none' }}>
+        {todo.title}
+      </span>
+    </li>
   );
 }
 

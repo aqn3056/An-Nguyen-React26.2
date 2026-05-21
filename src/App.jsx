@@ -7,15 +7,27 @@ function App() {
   const [todoList, setTodoList] = useState([]);
 
   const addTodo = (todoTitle) => {
-    const newTodo = { id: Date.now(), title: todoTitle };
+    const newTodo = { id: Date.now(), title: todoTitle, isCompleted: false };
     setTodoList(previous => [newTodo, ...previous]);
   };
+
+  const completeTodo = (id) => {
+    const updatedTodos = todoList.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, isCompleted: true };
+      }
+      return todo;
+    });
+    setTodoList(updatedTodos);
+  };
+
+  const filteredTodoList = todoList.filter(todo => !todo.isCompleted);
 
   return (
     <div>
       <h1>Todo List</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} />
+      <TodoList todoList={filteredTodoList} onCompleteTodo={completeTodo} />
     </div>
   );
 }
