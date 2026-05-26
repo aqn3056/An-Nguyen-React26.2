@@ -88,7 +88,10 @@ function TodosPage({ token }) {
           'X-CSRF-TOKEN': token,
         },
         credentials: 'include',
-        body: JSON.stringify({ isCompleted: true }),
+        body: JSON.stringify({
+          isCompleted: true,
+          createdAt: originalTodo.createdAt,
+        }),
       });
 
       if (!response.ok) {
@@ -121,6 +124,7 @@ function TodosPage({ token }) {
         body: JSON.stringify({
           title: editedTodo.title,
           isCompleted: editedTodo.isCompleted,
+          createdAt: originalTodo.createdAt,
         }),
       });
 
@@ -137,8 +141,6 @@ function TodosPage({ token }) {
     }
   };
 
-  const filteredTodoList = todoList.filter((todo) => !todo.isCompleted);
-
   return (
     <div>
       {error && (
@@ -152,7 +154,7 @@ function TodosPage({ token }) {
       {isTodoListLoading && <p>Loading todos...</p>}
       <TodoForm onAddTodo={addTodo} />
       <TodoList
-        todoList={filteredTodoList}
+        todoList={todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
       />
