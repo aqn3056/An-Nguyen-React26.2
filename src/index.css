@@ -1,0 +1,538 @@
+/* ===========================================================================
+   Design tokens
+   =========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* Brand palette */
+  --c-primary: #4f46e5;
+  --c-primary-strong: #4338ca;
+  --c-primary-soft: rgba(99, 91, 255, 0.16);
+  --c-secondary: #0e7490;
+  --c-accent: #db2777;
+  --c-danger: #c0223b;
+  --c-danger-strong: #a3162d;
+  --c-success: #047857;
+  --c-warning: #b45309;
+
+  /* Ink (text) */
+  --c-ink: #1c1b2e;
+  --c-ink-soft: #403e57;
+  --c-ink-muted: #494860;
+  --c-ink-invert: #ffffff;
+
+  /* Glass surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.66);
+  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-bg-faint: rgba(255, 255, 255, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+  --glass-shadow: 0 16px 40px rgba(20, 16, 54, 0.22);
+  --glass-shadow-sm: 0 6px 18px rgba(20, 16, 54, 0.18);
+
+  /* Focus */
+  --c-focus: #facc15;
+  --c-focus-ring: rgba(79, 70, 229, 0.85);
+
+  /* Typography */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-display: 'Avenir Next', 'Segoe UI', var(--font-sans);
+  --fs-300: clamp(0.78rem, 0.74rem + 0.2vw, 0.85rem);
+  --fs-400: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
+  --fs-500: clamp(1.05rem, 1rem + 0.4vw, 1.2rem);
+  --fs-600: clamp(1.3rem, 1.18rem + 0.7vw, 1.6rem);
+  --fs-700: clamp(1.7rem, 1.45rem + 1.4vw, 2.4rem);
+  --lh-tight: 1.18;
+  --lh-base: 1.55;
+
+  /* Spacing */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+
+  /* Radii */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --t-fast: 0.18s var(--ease);
+  --t-med: 0.28s var(--ease);
+}
+
+/* ===========================================================================
+   Reset and base
+   =========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: var(--fs-400);
+  line-height: var(--lh-base);
+  color: var(--c-ink);
+  background-color: #211a4d;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Animated aurora backdrop that the glass refracts over */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -2;
+  background:
+    radial-gradient(
+      38% 48% at 18% 24%,
+      rgba(124, 92, 255, 0.62),
+      transparent 70%
+    ),
+    radial-gradient(
+      42% 52% at 82% 18%,
+      rgba(20, 197, 214, 0.5),
+      transparent 72%
+    ),
+    radial-gradient(
+      48% 58% at 72% 82%,
+      rgba(219, 39, 119, 0.46),
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 56% at 24% 84%,
+      rgba(56, 189, 248, 0.42),
+      transparent 72%
+    ),
+    linear-gradient(135deg, #1e1b4b 0%, #312e81 42%, #0e7490 100%);
+  background-size: 200% 200%;
+  filter: saturate(1.12);
+  animation: auroraDrift 34s var(--ease) infinite alternate;
+}
+
+@keyframes auroraDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+    background-position: 0% 0%;
+  }
+  100% {
+    transform: translate3d(0, -2.5%, 0) scale(1.14);
+    background-position: 100% 100%;
+  }
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+  color: var(--c-ink);
+}
+
+a {
+  color: var(--c-primary-strong);
+}
+
+/* ===========================================================================
+   Accessibility helpers
+   =========================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Off-screen container for the reusable SVG filter definition */
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: -3rem;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-pill);
+  background: var(--c-ink);
+  color: var(--c-ink-invert);
+  text-decoration: none;
+  transition: top var(--t-fast);
+}
+
+.skip-link:focus {
+  top: var(--sp-3);
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   Glass surfaces
+   =========================================================================== */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-edge);
+}
+
+/* ===========================================================================
+   Liquid glass buttons
+   =========================================================================== */
+.btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.6em 1.25em;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--c-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    transform var(--t-fast),
+    box-shadow var(--t-med),
+    color var(--t-fast);
+}
+
+/* Glossy rim and translucent fill — kept faint so the refraction below reads */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--glass-bg-faint);
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 0 12px 2px rgba(255, 255, 255, 0.35),
+    var(--glass-shadow-sm);
+  transition:
+    box-shadow var(--t-med),
+    background var(--t-med);
+}
+
+/* Refraction layer: blurs and distorts the backdrop for the liquid look */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  -webkit-backdrop-filter: blur(7px) saturate(1.8) brightness(1.08);
+  backdrop-filter: blur(7px) saturate(1.8) brightness(1.08);
+  filter: url(#glass-distortion);
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:hover::before {
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 9px 1px rgba(255, 255, 255, 0.55),
+    var(--glass-shadow);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--primary {
+  color: var(--c-ink-invert);
+  text-shadow: 0 1px 3px rgba(20, 16, 54, 0.55);
+}
+
+.btn--primary::before {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 91, 255, 0.38),
+    rgba(67, 56, 202, 0.44)
+  );
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.7),
+    inset -1px -1px 2px rgba(67, 56, 202, 0.4),
+    inset 0 0 14px rgba(255, 255, 255, 0.3),
+    0 8px 22px rgba(67, 56, 202, 0.4);
+}
+
+.btn--danger {
+  color: var(--c-ink-invert);
+  text-shadow: 0 1px 3px rgba(54, 8, 16, 0.55);
+}
+
+.btn--danger::before {
+  background: linear-gradient(
+    135deg,
+    rgba(192, 34, 59, 0.36),
+    rgba(163, 22, 45, 0.44)
+  );
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.62),
+    inset -1px -1px 2px rgba(163, 22, 45, 0.4),
+    inset 0 0 14px rgba(255, 255, 255, 0.26),
+    0 8px 22px rgba(163, 22, 45, 0.38);
+}
+
+/* Square icon button keeps a 44px touch target */
+.btn--icon {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: var(--radius-md);
+}
+
+.btn--icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btn--sm {
+  min-height: 44px;
+  padding: 0.4em 0.95em;
+  font-size: var(--fs-300);
+}
+
+/* ===========================================================================
+   Form controls
+   =========================================================================== */
+label {
+  font-size: var(--fs-300);
+  font-weight: 600;
+  color: var(--c-ink-soft);
+}
+
+.field-input,
+.field-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6em 0.9em;
+  font: inherit;
+  color: var(--c-ink);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 2px rgba(20, 16, 54, 0.08);
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.field-input::placeholder {
+  color: var(--c-ink-muted);
+}
+
+.field-input:focus-visible,
+.field-select:focus-visible {
+  outline: none;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px var(--c-focus-ring);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.field-input[aria-invalid='true'] {
+  border-color: var(--c-danger);
+  box-shadow: 0 0 0 3px rgba(192, 34, 59, 0.25);
+}
+
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.2em;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235b5973' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85em center;
+}
+
+.field-error {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-300);
+  font-weight: 600;
+  color: var(--c-danger-strong);
+}
+
+/* ===========================================================================
+   Custom checkbox
+   =========================================================================== */
+.todo-check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  border: 2px solid var(--c-primary);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast);
+}
+
+.todo-check:hover {
+  transform: scale(1.06);
+}
+
+.todo-check:checked {
+  background: linear-gradient(
+    135deg,
+    var(--c-primary),
+    var(--c-primary-strong)
+  );
+  border-color: var(--c-primary-strong);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: 70% 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.todo-check:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   Status: spinner, alert, badges
+   =========================================================================== */
+.spinner {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  border: 2.5px solid var(--c-primary-soft);
+  border-top-color: var(--c-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(192, 34, 59, 0.4);
+  background: rgba(255, 235, 238, 0.85);
+  color: var(--c-danger-strong);
+  font-size: var(--fs-400);
+}
+
+.alert > svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.1em;
+}
+
+.alert p {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-left: auto;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  padding: 0 0.5em;
+  font-size: var(--fs-300);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  background: var(--c-primary-soft);
+  color: var(--c-primary-strong);
+}
+
+/* ===========================================================================
+   Reduced motion
+   =========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  body::before {
+    animation: none;
+  }
+}

@@ -7,6 +7,10 @@ export default ({ mode }) => {
 
   return defineConfig({
     plugins: [react()],
+    build: {
+      // Keep source maps out of production so original source is not exposed.
+      sourcemap: false,
+    },
     server: {
       port: 3001,
       proxy: {

@@ -1,0 +1,6 @@
+# Proxy API calls to the backend so requests stay same-origin.
+# Update the target to a backend that allows this deployment's origin.
+/api/*  https://ctd-learns-node-l42tx.ondigitalocean.app/api/:splat  200
+
+# SPA fallback so client-side routes (/active, /completed) resolve on reload.
+/*  /index.html  200

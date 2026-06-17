@@ -1,21 +1,39 @@
-import { forwardRef } from 'react';
+function TextInputWithLabel({
+  id,
+  label,
+  value,
+  onChange,
+  ref,
+  type = 'text',
+  error,
+  hideLabel = false,
+  ...props
+}) {
+  const errorId = error ? `${id}-error` : undefined;
 
-const TextInputWithLabel = forwardRef(function TextInputWithLabel(
-  { elementId, labelText, onChange, value },
-  ref
-) {
   return (
-    <>
-      <label htmlFor={elementId}>{labelText}</label>
+    <div className="field-group">
+      <label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
+        {label}
+      </label>
       <input
-        type="text"
-        id={elementId}
+        className="field-input"
+        id={id}
+        type={type}
         ref={ref}
         value={value}
         onChange={onChange}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={errorId}
+        {...props}
       />
-    </>
+      {error && (
+        <p className="field-error" id={errorId}>
+          {error}
+        </p>
+      )}
+    </div>
   );
-});
+}
 
 export default TextInputWithLabel;
